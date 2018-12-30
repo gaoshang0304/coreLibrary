@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ffffff</color>
+    <color name="colorPrimaryDark">#ffffff</color>
+    <color name="colorAccent">#5c7182</color>
+
+    <color name="color_bg">#f2f2f2</color>
+    <color name="color_title">#26282b</color>
+    <color name="color_line">#DDDDDD</color>
+
+    <color name="common_dialog_bg">#ffffff</color>
+    <!-- 输入框Hint文字主颜色 -->
+    <color name="color_text_hint">#FFBDBDBD</color>
+    <!-- 一级级文字颜色 -->
+    <color name="color_text_title">#7F000000</color>
+    <!-- 二级文字颜色 -->
+    <color name="color_text_content">#FFA1A1A1</color>
+    <!-- 三级文字主颜色 -->
+    <color name="color_text_sub">#FF999999</color>
+    <!-- 链接 -->
+    <color name="color_blue_link">#FF3E8DE5</color>
+
+    <color name="color_white">#ffffff</color>
+</resources>

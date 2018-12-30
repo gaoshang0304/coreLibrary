@@ -30,12 +30,6 @@
   <component name="ProjectType">
     <option name="id" value="Android" />
   </component>
-  <component name="SvnConfiguration" myUseAcceleration="nothing">
-    <configuration useDefault="false">C:\Users\54303\AppData\Roaming\Subversion</configuration>
-    <option name="sshConnectionType" value="PASSWORD" />
-    <option name="sshExecutablePath" value="svn://47.104.234.45:3690/project" />
-    <option name="sshUserName" value="gaojunchao" />
-  </component>
   <component name="masterDetails">
     <states>
       <state key="ProjectJDKs.UI">

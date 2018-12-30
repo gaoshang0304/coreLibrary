@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">coreLibrary</string>
+    <string name="text_cancel">取消</string>
+    <string name="text_confirm">确定</string>
 </resources>

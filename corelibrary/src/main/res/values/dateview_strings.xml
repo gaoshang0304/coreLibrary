@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dateview_year">年</string>
+    <string name="dateview_month">月</string>
+    <string name="dateview_day">日</string>
+    <string name="dateview_hour">时</string>
+    <string name="dateview_minutes">分</string>
+    <string name="dateview_month_date">%1$S月%2$S日</string>
+</resources>
