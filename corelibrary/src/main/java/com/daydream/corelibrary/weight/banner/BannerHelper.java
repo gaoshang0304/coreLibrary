@@ -12,10 +12,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.droid.library.app.App;
-import com.droid.library.thirdplatform.imageloader.CoreImageLoader;
-import com.droid.library.utils.app.PixelUtil;
-import com.xinye.lib.R;
+import com.daydream.corelibrary.R;
+import com.daydream.corelibrary.app.App;
+import com.daydream.corelibrary.utils.PixelUtils;
+import com.daydream.corelibrary.utils.glide.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.List;
  * @author wangheng
  */
 public class BannerHelper<T extends IBannerProtocol>
-        implements ViewPager.OnPageChangeListener,LifecycleCallback{
+        implements ViewPager.OnPageChangeListener, LifecycleCallback {
     private static final boolean DEBUG = App.getInstance().isDebug();
     private static final String TAG = "Banner";
 
@@ -39,13 +39,13 @@ public class BannerHelper<T extends IBannerProtocol>
     private Fragment mFragment;
     private LoopViewPager mViewPager;
     private LinearLayout mIndicatorContainer;
-    private int width,height;
+    private int width, height;
     private ArrayList<T> mBannerList;
     private int mScrollInterval = AUTO_SCROLL_INTERVAL;
 
     private IBannerCallback<T> mCallback = null;
 
-    public static class Builder<B extends IBannerProtocol>{
+    public static class Builder<B extends IBannerProtocol> {
         private int width;
         private int height;
         private FragmentActivity activity;
@@ -56,44 +56,52 @@ public class BannerHelper<T extends IBannerProtocol>
         private int scrollInterval;
         private IBannerCallback<B> callback;
 
-        public Builder<B> width(int width){
+        public Builder<B> width(int width) {
             this.width = width;
             return this;
         }
-        public Builder<B> height(int height){
+
+        public Builder<B> height(int height) {
             this.height = height;
             return this;
         }
-        public Builder<B> activity(FragmentActivity activity){
+
+        public Builder<B> activity(FragmentActivity activity) {
             this.activity = activity;
             return this;
         }
-        public Builder<B> fragment(Fragment fragment){
+
+        public Builder<B> fragment(Fragment fragment) {
             this.fragment = fragment;
             return this;
         }
-        public Builder<B> viewPager(LoopViewPager viewPager){
+
+        public Builder<B> viewPager(LoopViewPager viewPager) {
             this.viewPager = viewPager;
             return this;
         }
-        public Builder<B> indicatorLayout(LinearLayout indicatorLayout){
+
+        public Builder<B> indicatorLayout(LinearLayout indicatorLayout) {
             this.indicatorLayout = indicatorLayout;
             return this;
         }
-        public Builder<B> bannerList(ArrayList<B> bannerList){
+
+        public Builder<B> bannerList(ArrayList<B> bannerList) {
             this.bannerList = bannerList;
             return this;
         }
-        public Builder<B> scrollInterval(int scrollInterval){
+
+        public Builder<B> scrollInterval(int scrollInterval) {
             this.scrollInterval = scrollInterval;
             return this;
         }
-        public Builder<B> callback(IBannerCallback<B> callback){
+
+        public Builder<B> callback(IBannerCallback<B> callback) {
             this.callback = callback;
             return this;
         }
 
-        public BannerHelper<B> build(){
+        public BannerHelper<B> build() {
             BannerHelper<B> helper = new BannerHelper<>();
             helper.mActivity = activity;
             helper.mFragment = fragment;
@@ -122,10 +130,9 @@ public class BannerHelper<T extends IBannerProtocol>
     }
 
 
-
     @Override
     public void onDestroyView() {
-        if(mViewPager != null){
+        if (mViewPager != null) {
             mViewPager.removeOnPageChangeListener(BannerHelper.this);
         }
     }
@@ -150,6 +157,7 @@ public class BannerHelper<T extends IBannerProtocol>
             mViewPager.stopAutoScroll();
         }
     }
+
     private void startAutoScrollIfNeed() {
         if (mViewPager != null && mBannerList != null && mBannerList.size() > 1) {
             mViewPager.startAutoScroll();
@@ -162,12 +170,11 @@ public class BannerHelper<T extends IBannerProtocol>
     }
 
 
-
     @Override
     public void onHiddenChanged(boolean hidden) {
-        if(hidden){
+        if (hidden) {
             stopAutoScrollIfNeed();
-        }else{
+        } else {
             startAutoScrollIfNeed();
         }
     }
@@ -185,10 +192,10 @@ public class BannerHelper<T extends IBannerProtocol>
     }
 
     private void onUserVisibleHint(boolean isVisibleToUser) {
-        if(mActivity != null && mActivity.isFinishing()){
+        if (mActivity != null && mActivity.isFinishing()) {
             return;
         }
-        if(mFragment != null && mFragment.isDetached()){
+        if (mFragment != null && mFragment.isDetached()) {
             return;
         }
         if (mViewPager != null && mBannerList != null && mBannerList.size() > 1) {
@@ -202,7 +209,6 @@ public class BannerHelper<T extends IBannerProtocol>
 
     /**
      * onBannerListRequested:BannerList请求完成的回调 <br/>
-     *
      */
     private void onBannerListRequested() {
 
@@ -220,7 +226,7 @@ public class BannerHelper<T extends IBannerProtocol>
 
             mIndicatorContainer.removeAllViews();
 
-            if(mBannerList != null && mBannerList.size() > 1) {
+            if (mBannerList != null && mBannerList.size() > 1) {
                 LinearLayout.LayoutParams indicatorParams = getIndicatorViewLayoutParams();
 
                 int len = mBannerList.size();
@@ -259,8 +265,8 @@ public class BannerHelper<T extends IBannerProtocol>
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(mCallback != null){
-                                mCallback.onBannerItemClick(view,mBannerList.get(position),position);
+                            if (mCallback != null) {
+                                mCallback.onBannerItemClick(view, mBannerList.get(position), position);
                             }
                         }
                     });
@@ -269,10 +275,10 @@ public class BannerHelper<T extends IBannerProtocol>
 
                 @Override
                 public void bindDataToView(View view, T banner, int position) {
-                    if(view instanceof ImageView){
+                    if (view instanceof ImageView) {
                         ImageView imageView = (ImageView) view;
-                        if(mActivity != null) {
-                            CoreImageLoader.getInstance().display(imageView,banner.getBannerImageUrl());
+                        if (mActivity != null) {
+                            ImageLoader.getInstance().display(banner.getBannerImageUrl(), imageView);
                         }
                     }
                 }
@@ -287,7 +293,7 @@ public class BannerHelper<T extends IBannerProtocol>
                 mViewPager.setCurrentItem(0);
             }
         } catch (Exception e) {
-            if(DEBUG) {
+            if (DEBUG) {
                 e.printStackTrace();
             }
         }
@@ -303,7 +309,7 @@ public class BannerHelper<T extends IBannerProtocol>
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
         indicatorParams.gravity = Gravity.CENTER;
-        indicatorParams.leftMargin = PixelUtil.dip2px(6);
+        indicatorParams.leftMargin = PixelUtils.dip2px(6);
         return indicatorParams;
     }
 
@@ -311,7 +317,7 @@ public class BannerHelper<T extends IBannerProtocol>
      * addIndicatorView:添加指示器View. <br/>
      *
      * @param indicatorParams params
-     * @param position position
+     * @param position        position
      */
     private void addIndicatorView(LinearLayout.LayoutParams indicatorParams, final int position) {
         ImageView indicatorView = new ImageView(mActivity);
@@ -319,7 +325,7 @@ public class BannerHelper<T extends IBannerProtocol>
         indicatorView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mViewPager != null){
+                if (mViewPager != null) {
                     mViewPager.setCurrentItem(position);
                 }
             }
@@ -351,8 +357,8 @@ public class BannerHelper<T extends IBannerProtocol>
                 indicatorView.setImageResource(R.drawable.circle_banner_normal);
             }
         }
-        if(mCallback != null){
-            mCallback.onBannerSelected(mBannerList.get(position),position);
+        if (mCallback != null) {
+            mCallback.onBannerSelected(mBannerList.get(position), position);
         }
     }
 

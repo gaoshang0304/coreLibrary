@@ -28,9 +28,9 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.daydream.corelibrary.R;
+import com.daydream.corelibrary.scan.camera.CameraManager;
 import com.google.zxing.ResultPoint;
-import com.hogolife.homanager.R;
-import com.hogolife.homanager.common.scan.camera.CameraManager;
 
 import java.util.Collection;
 import java.util.HashSet;

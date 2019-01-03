@@ -8,7 +8,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.view.SurfaceHolder;
@@ -16,8 +15,9 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
+
 import com.daydream.corelibrary.R;
+import com.daydream.corelibrary.app.base.BaseActivity;
 import com.daydream.corelibrary.scan.camera.CameraManager;
 import com.daydream.corelibrary.scan.decoding.CaptureActivityHandler;
 import com.daydream.corelibrary.scan.decoding.InactivityTimer;
@@ -25,15 +25,11 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
-public class ScanCodeActivity extends BaseActivity implements Callback, OnPhotoPickListener {
+public class ScanCodeActivity extends BaseActivity implements Callback, View.OnClickListener {
 
     private static final float BEEP_VOLUME = 0.10f;
     private static final long VIBRATE_DURATION = 200L;
@@ -45,10 +41,7 @@ public class ScanCodeActivity extends BaseActivity implements Callback, OnPhotoP
             mediaPlayer.seekTo(0);
         }
     };
-    @BindView(R.id.iv_back)
-    ImageView ic_back;
-    @BindView(R.id.toolbar_menu_select_pic)
-    TextView tv_album;
+
     private CaptureActivityHandler handler;
     private ViewfinderView viewfinderView;
     private boolean hasSurface;
@@ -70,21 +63,22 @@ public class ScanCodeActivity extends BaseActivity implements Callback, OnPhotoP
     @Override
     protected void initView(Bundle savedInstanceState) {
 
-        StatusBarUtils.setColor(this, getResources().getColor(R.color.translucent_black_55));
+//        StatusBarUtils.setColor(this, getResources().getColor(R.color.translucent_black_55));
         viewfinderView = findViewById(R.id.scanCode_vv_finder);
         CameraManager.init(getApplication());
         inactivityTimer = new InactivityTimer(this);
+
+        (findViewById(R.id.iv_back)).setOnClickListener(this);
+        (findViewById(R.id.toolbar_menu_select_pic)).setOnClickListener(this);
     }
 
-    @OnClick({R.id.iv_back, R.id.toolbar_menu_select_pic})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.iv_back:
-                finish();
-                break;
-            case R.id.toolbar_menu_select_pic:
-                PhotoPicker.init().setMaxCount(1).setShowCamera(true).setUseSystemCamera(false).startPick(ScanCodeActivity.this, this);
-                break;
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.iv_back) {
+            finish();
+        } else if (id == R.id.toolbar_menu_select_pic) {
+
         }
     }
 
@@ -134,31 +128,31 @@ public class ScanCodeActivity extends BaseActivity implements Callback, OnPhotoP
         super.onDestroy();
     }
 
-    @Override
-    public void onPhotoPick(boolean userCancel, List<String> list) {
-
-    }
-
-    @Override
-    public void onPhotoCapture(String path) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Result result = ScanCodeUtils.scanningImage(path);
-                if (result == null) {
-                    Looper.prepare();
-                    ToastUtils.showToast(mContext, "图片格式有误");
-                    Looper.loop();
-                } else {
-                    // 数据返回
-                    Looper.prepare();
-                    String recode = ScanCodeUtils.recode(result.toString());
-                    goToLocalCode(recode);
-                    Looper.loop();
-                }
-            }
-        }).start();
-    }
+//    @Override
+//    public void onPhotoPick(boolean userCancel, List<String> list) {
+//
+//    }
+//
+//    @Override
+//    public void onPhotoCapture(String path) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Result result = ScanCodeUtils.scanningImage(path);
+//                if (result == null) {
+//                    Looper.prepare();
+//                    ToastUtils.showToast(mContext, "图片格式有误");
+//                    Looper.loop();
+//                } else {
+//                    // 数据返回
+//                    Looper.prepare();
+//                    String recode = ScanCodeUtils.recode(result.toString());
+//                    goToLocalCode(recode);
+//                    Looper.loop();
+//                }
+//            }
+//        }).start();
+//    }
 
     /**
      * 扫码出来的内容
@@ -171,7 +165,7 @@ public class ScanCodeActivity extends BaseActivity implements Callback, OnPhotoP
         String resultString = result.getText();
         if (!TextUtils.isEmpty(resultString)) {
             Intent intent = new Intent();
-            intent.putExtra(Extra.scan_content, resultString);
+            intent.putExtra("content", resultString);
             setResult(RESULT_OK, intent);
             finish();
         }

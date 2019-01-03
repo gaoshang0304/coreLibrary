@@ -21,4 +21,12 @@
     <color name="color_blue_link">#FF3E8DE5</color>
 
     <color name="color_white">#ffffff</color>
+
+    <!-- 扫码 -->
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="viewfinder_frame">#FF000000</color>
+    <color name="viewfinder_corner">#ffffff</color>
+    <color name="viewfinder_laser">#4cb529</color>
+    <color name="result_view">#B0000000</color>
+    <color name="possible_result_points">#C0FFFF00</color>
 </resources>

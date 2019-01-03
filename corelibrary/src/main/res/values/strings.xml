@@ -2,4 +2,14 @@
     <string name="app_name">coreLibrary</string>
     <string name="text_cancel">取消</string>
     <string name="text_confirm">确定</string>
+
+    <!--扫码-->
+    <string name="scan_image_from_album">相册</string>
+    <string name="scan_code_title">扫一扫</string>
+    <string name="scan_code_tip_bar_code_line">将条形码放入框内，即可自动扫描</string>
+
+    <!--load more view-->
+    <string name="load_more_error">出错了，请点击重新加载更多</string>
+    <string name="load_more_loading">努力加载中...</string>
+    <string name="load_more_done">没有更多数据</string>
 </resources>

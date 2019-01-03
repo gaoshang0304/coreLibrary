@@ -104,11 +104,9 @@ public class ToastUtils {
     public static void showToast(Context context, String msg, int duration) {
         try {
             cancelToast();
-            mToast = new Toast(context);
-            mToast.setText(msg);
-            mToast.setDuration(duration);
-            mToast.setGravity(Gravity.CENTER, 0, -30);
-            mToast.show();
+            Toast toast = Toast.makeText(context, msg, duration);
+            toast.setGravity(Gravity.CENTER, 0, -30);
+            toast.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,11 +121,9 @@ public class ToastUtils {
     public static void showToast(Context context, int resId, int duration) {
         try {
             cancelToast();
-            mToast = new Toast(context);
-            mToast.setText(resId);
-            mToast.setDuration(duration);
-            mToast.setGravity(Gravity.CENTER, 0, -30);
-            mToast.show();
+            Toast toast = Toast.makeText(context, resId, duration);
+            toast.setGravity(Gravity.CENTER, 0, -30);
+            toast.show();
         } catch (Exception e) {
             e.printStackTrace();
         }

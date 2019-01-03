@@ -75,7 +75,7 @@ public abstract class BaseFragment extends Fragment {
         mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         TAG = getClass().getSimpleName();
         binder = ButterKnife.bind(this, view);
-        initUI(view, savedInstanceState);
+        initView(view, savedInstanceState);
         getBundle(getArguments());
         isViewCreated = true;
     }
@@ -101,7 +101,7 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    protected abstract void loadData();
+    protected void loadData(){}
 
     @Override
     public void onDestroyView() {
@@ -137,7 +137,7 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 初始化UI
      */
-    public abstract void initUI(View view, @Nullable Bundle savedInstanceState);
+    public abstract void initView(View view, @Nullable Bundle savedInstanceState);
 
     /**
      * 隐藏软键盘

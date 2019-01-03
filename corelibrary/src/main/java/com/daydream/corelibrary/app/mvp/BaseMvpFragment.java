@@ -3,7 +3,9 @@ package com.daydream.corelibrary.app.mvp;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+
 import com.daydream.corelibrary.app.base.BaseFragment;
+import com.daydream.corelibrary.utils.DialogUtils;
 import com.daydream.corelibrary.utils.ToastUtils;
 
 /**
@@ -34,12 +36,12 @@ public abstract class BaseMvpFragment<T extends IPresenter> extends BaseFragment
 
     @Override
     public void showLoading(String msg) {
-
+        DialogUtils.showLoadingDialog(mContext, msg);
     }
 
     @Override
     public void hideLoading() {
-
+        DialogUtils.hideLoadingDialog();
     }
 
     @Override

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <RelativeLayout
+        android:id="@+id/rl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#31000000"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_15"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back"/>
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/scan_code_title"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/sp_16" />
+
+        <TextView
+            android:id="@+id/toolbar_menu_select_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/dp_15"
+            android:layout_alignParentRight="true"
+            android:text="@string/scan_image_from_album"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/sp_14" />
+
+    </RelativeLayout>
+
+    <SurfaceView
+        android:id="@+id/scanCode_sv_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_toolbar"/>
+
+    <com.daydream.corelibrary.scan.view.ViewfinderView
+        android:id="@+id/scanCode_vv_finder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_toolbar"/>
+
+    <!--底部按钮-->
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:orientation="vertical"-->
+        <!--android:visibility="visible">-->
+
+        <!--扫描本地图片、打开手电筒-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_gravity="center_horizontal">-->
+
+            <!--<ImageView-->
+                <!--andrroomIdd:idroomId@+id/btn_scan_code_local_pic"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:padding="@dimen/x20"-->
+                <!--android:src="@drawable/ic_scan_code_local"/>-->
+
+            <!--<ImageView-->
+                <!--andrroomIdd:idroomId@+id/btn_scan_code_swtich_light"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:padding="@dimen/x20"-->
+                <!--android:src="@drawable/ic_scan_code_open_light"/>-->
+
+            <!--<ImageView-->
+                <!--andrroomIdd:idroomId@+id/btn_scan_code_help"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:padding="@dimen/x20"-->
+                <!--android:src="@drawable/ic_scan_code_help" />-->
+        <!--</LinearLayout>-->
+
+        <!--<ImageView-->
+            <!--andrroomIdd:idroomId@+id/btn_scan_code_swtich_scan"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:padding="@dimen/x20"-->
+            <!--android:layout_marginTop="@dimen/x10"-->
+            <!--android:layout_marginBottom="@dimen/x10"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:src="@drawable/ic_scan_code_swtich" />-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="@dimen/x20"-->
+            <!--android:layout_marginTop="@dimen/x10"-->
+            <!--android:text="@string/scan_code_tip_line1"/>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_marginTop="@dimen/x2"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="@dimen/x20"-->
+            <!--android:layout_marginBottom="@dimen/x35"-->
+            <!--android:text="@string/scan_code_tip_line2"/>-->
+
+    <!--</LinearLayout>-->
+
+</RelativeLayout>

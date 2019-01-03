@@ -145,6 +145,10 @@ public class BottomTabView extends LinearLayout {
         this.onSecondSelectListener = onSecondSelectListener;
     }
 
+    public void setSelectedItem(int i) {
+        updatePosition(i);
+    }
+
     /**
      * 第二次被选择的监听器
      */

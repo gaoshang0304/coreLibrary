@@ -19,10 +19,10 @@ package com.daydream.corelibrary.scan.decoding;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.daydream.corelibrary.scan.view.ScanCodeActivity;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
-import com.hogolife.homanager.module.main.ui.ScanCodeActivity;
 
 import java.util.Hashtable;
 import java.util.Vector;

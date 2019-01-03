@@ -22,16 +22,16 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+import com.daydream.corelibrary.R;
+import com.daydream.corelibrary.scan.camera.CameraManager;
+import com.daydream.corelibrary.scan.camera.PlanarYUVLuminanceSource;
+import com.daydream.corelibrary.scan.view.ScanCodeActivity;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
-import com.hogolife.homanager.R;
-import com.hogolife.homanager.common.scan.camera.CameraManager;
-import com.hogolife.homanager.common.scan.camera.PlanarYUVLuminanceSource;
-import com.hogolife.homanager.module.main.ui.ScanCodeActivity;
 
 import java.util.Hashtable;
 
@@ -50,14 +50,12 @@ final class DecodeHandler extends Handler {
 
     @Override
     public void handleMessage(Message message) {
-        switch (message.what) {
-            case R.id.decode:
-                //Log.d(TAG, "Got decode message");
-                decode((byte[]) message.obj, message.arg1, message.arg2);
-                break;
-            case R.id.quit:
-                Looper.myLooper().quit();
-                break;
+        int what = message.what;
+        if (what == R.id.decode) {
+            //Log.d(TAG, "Got decode message");
+            decode((byte[]) message.obj, message.arg1, message.arg2);
+        } else if (what == R.id.quit) {
+            Looper.myLooper().quit();
         }
     }
 
