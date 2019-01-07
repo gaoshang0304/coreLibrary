@@ -1,5 +1,35 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.daydream.corelibrary" >
+    package="com.daydream.corelibrary">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <application>
+
+        <activity
+            android:name=".photo.photopicker.PhotoPickerActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/imagepicker_ImagePickerTheme" />
+
+        <activity
+            android:name=".photo.photopicker.PhotoPagerActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/imagepicker_ImagePickerTheme" />
+
+        <activity
+            android:name=".photo.imagedit.IMGEditActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/__Picker.Camera.Theme" />
+
+        <activity
+            android:name=".photo.photopicker.camera.CameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/__Picker.Camera.Theme" />
+
+    </application>
 </manifest>

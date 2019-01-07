@@ -45,4 +45,15 @@
         <item name="android:windowExitAnimation">@anim/pop_bottom_slide_out</item>
     </style>
 
+    <!--选取图片 相机-->
+    <style name="__Picker.Camera.Theme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <!--选取图片 相册-->
+    <style name="imagepicker_BaseTheme" parent="Theme.AppCompat.NoActionBar"></style>
+
+    <style name="imagepicker_ImagePickerTheme" parent="imagepicker_BaseTheme"></style>
+
 </resources>

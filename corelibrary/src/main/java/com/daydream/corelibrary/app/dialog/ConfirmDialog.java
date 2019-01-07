@@ -37,7 +37,7 @@ public class ConfirmDialog extends AbsDialog {
         initView();
     }
 
-    public void initView() {
+    private void initView() {
         setContentView(R.layout.dialog_confirm);
 
         tv_title = (TextView) findViewById(R.id.tv_dialog_title);

@@ -1,6 +1,7 @@
 package com.hogolife.corelibrary.mvp.adapter;
 
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.daydream.corelibrary.app.adapter.BaseQuickAdapter;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 
 public class PhotoAdapter extends BaseQuickAdapter<GankListBean, BaseViewHolder> {
 
+    private OnItemLongClickListener mListener;
+
     public PhotoAdapter(int layoutResId, @Nullable ArrayList<GankListBean> data) {
         super(layoutResId, data);
     }
@@ -29,5 +32,23 @@ public class PhotoAdapter extends BaseQuickAdapter<GankListBean, BaseViewHolder>
     protected void convert(BaseViewHolder holder, GankListBean item) {
         ImageView iv_photo = holder.getView(R.id.iv_photo);
         ImageLoader.getInstance().display(item.getUrl(), iv_photo);
+
+        iv_photo.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mListener != null) {
+                    mListener.OnItemLongClick(item);
+                }
+                return true;
+            }
+        });
+    }
+
+    public interface OnItemLongClickListener {
+        void OnItemLongClick(GankListBean item);
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        mListener = listener;
     }
 }
