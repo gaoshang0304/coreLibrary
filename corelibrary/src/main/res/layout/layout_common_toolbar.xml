@@ -12,10 +12,12 @@
         android:fitsSystemWindows="true"
         android:minHeight="?attr/actionBarSize">
 
-        <TextView
+        <com.daydream.corelibrary.weight.MarqueeTextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="marquee"
             android:layout_gravity="center"
             android:text=""
             android:textColor="@color/color_title"

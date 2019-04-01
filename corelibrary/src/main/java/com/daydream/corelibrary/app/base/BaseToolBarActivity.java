@@ -1,9 +1,9 @@
 package com.daydream.corelibrary.app.base;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -16,6 +16,11 @@ import android.widget.TextView;
 
 import com.daydream.corelibrary.R;
 import com.daydream.corelibrary.app.manager.AppManager;
+import com.daydream.corelibrary.app.mvp.IPresenter;
+import com.daydream.corelibrary.app.mvp.IView;
+import com.daydream.corelibrary.app.transitionmode.TransitionMode;
+import com.daydream.corelibrary.utils.DialogUtils;
+import com.daydream.corelibrary.weight.MultipleStatusView;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -28,13 +33,24 @@ import butterknife.Unbinder;
  * @since 2018-05-08
  */
 
-public abstract class BaseToolBarActivity extends AppCompatActivity {
+public abstract class BaseToolBarActivity<T extends IPresenter> extends AppCompatActivity implements IView {
 
     protected Toolbar toolbar;
     private FrameLayout frame_layout;
     private Unbinder bind;
     protected Context mContext;
     public TextView tv_title;
+    protected MultipleStatusView mMultipleStatusView = null;
+    private TransitionMode mTransitionMode = TransitionMode.RIGHT;
+
+    protected T mPresenter = initPresenter();
+
+    /**
+     * 在子类中初始化对应的presenter
+     *
+     * @return 相应的presenter
+     */
+    protected abstract T initPresenter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +59,36 @@ public abstract class BaseToolBarActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.tool_bar);
         frame_layout = findViewById(R.id.frame_layout);
         tv_title = findViewById(R.id.toolbar_title);
-        View contentView = LayoutInflater.from(this).inflate(getContentLayout(), null);
+        View contentView = LayoutInflater.from(this).inflate(getLayoutId(), null);
         frame_layout.addView(contentView);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         bind = ButterKnife.bind(this, contentView);
         initView(savedInstanceState);
-        initData();
         onViewCreated();
+        initData();
         AppManager.getAppManager().addActivity(this);
+        TransitionMode mode = setOverridePendingTransitionMode(mTransitionMode);
+        if (mode.equals(TransitionMode.LEFT)) {
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        } else if (mode.equals(TransitionMode.RIGHT)) {
+            overridePendingTransition(R.anim.enter_trans, R.anim.exit_right);
+        }else if (mode.equals(TransitionMode.TOP)) {
+            overridePendingTransition(R.anim.top_in, R.anim.top_out);
+        }else if (mode.equals(TransitionMode.BOTTOM)) {
+            overridePendingTransition(R.anim.bottom_in, 0);
+        }else if (mode.equals(TransitionMode.SCALE)) {
+            overridePendingTransition(R.anim.scale_in, R.anim.scale_out);
+        }else if (mode.equals(TransitionMode.FADE)) {
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }else if (mode.equals(TransitionMode.ZOOM)) {
+            overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+        }
     }
 
     protected void onViewCreated() {
-
+        if (mPresenter != null) {
+            mPresenter.attachView(this);
+        }
     }
 
     protected void initTitleBar(Toolbar toolbar, String title) {
@@ -85,14 +119,18 @@ public abstract class BaseToolBarActivity extends AppCompatActivity {
         AppManager.getAppManager().finishActivity(this);
         if (bind != null) {
             bind.unbind();
+            bind = null;
+        }
+        if (mPresenter != null) {
+            mPresenter.detachView();
+            mPresenter = null;
         }
     }
-
 
     /**
      * 直接写布局不用考虑toolbar
      */
-    public abstract int getContentLayout();
+    public abstract int getLayoutId();
 
     /**
      * 用于初始化UI至少要初始化toolbar，如果还需要别的方法可以自己加
@@ -100,29 +138,78 @@ public abstract class BaseToolBarActivity extends AppCompatActivity {
     protected abstract void initView(Bundle savedInstanceState);
 
     /**
-     * @param intent 自己new intent 可以加extra
+     * 显示提示框
      */
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_from_right, R.anim.exit_from_right);
+    public void showLoading(@Nullable String msg) {
+        DialogUtils.showLoadingDialog(this, msg);
     }
 
     /**
-     * @param intent      自己new intent 可以加extra
-     * @param requestCode requestCode
+     * 隐藏提示框
      */
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        overridePendingTransition(R.anim.slide_in_from_right, R.anim.exit_from_right);
+    public void hideLoading() {
+        DialogUtils.hideLoadingDialog();
     }
 
+    @Override
+    public void stateError() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showError();
+        }
+    }
+
+    @Override
+    public void stateNoNetWork() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showNoNetwork();
+        }
+    }
+
+    @Override
+    public void stateEmpty() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showEmpty();
+        }
+    }
+
+    @Override
+    public void stateLoading() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showLoading();
+        }
+    }
+
+    @Override
+    public void stateMain() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showContent();
+        }
+    }
+
+    protected TransitionMode setOverridePendingTransitionMode(TransitionMode transitionMode) {
+        mTransitionMode = transitionMode;
+        return mTransitionMode;
+    }
 
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.exit_from_right, R.anim.slide_out_to_right);
+        TransitionMode mode = setOverridePendingTransitionMode(mTransitionMode);
+        if (mode.equals(TransitionMode.LEFT)) {
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        } else if (mode.equals(TransitionMode.RIGHT)) {
+            overridePendingTransition(R.anim.exit_right, R.anim.exit_trans);
+        }else if (mode.equals(TransitionMode.TOP)) {
+            overridePendingTransition(R.anim.top_in, R.anim.top_out);
+        }else if (mode.equals(TransitionMode.BOTTOM)) {
+            overridePendingTransition(0, R.anim.bottom_out);
+        }else if (mode.equals(TransitionMode.SCALE)) {
+            overridePendingTransition(R.anim.scale_in, R.anim.scale_out);
+        }else if (mode.equals(TransitionMode.FADE)) {
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }else if (mode.equals(TransitionMode.ZOOM)) {
+            overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+        }
     }
 
     /**

@@ -2,6 +2,7 @@ package com.daydream.corelibrary.utils;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.daydream.corelibrary.app.dialog.LoadingDialog;
 
@@ -14,23 +15,13 @@ public class DialogUtils {
     private static LoadingDialog dialog;
     private static LoadingDialog dialogMsg;
 
-    public static void showLoadingDialog(Context context) {
-        if (dialog == null) {
-            dialog = new LoadingDialog.Builder(context)
-                    .setShowMessage(false)
-                    .setCancelable(false)
-                    .setCancelOutside(false).create();
-        }
-
-        if (!dialog.isShowing()) {
-            dialog.show();
-        }
-    }
-
     public static void showLoadingDialog(Context context, @Nullable String msg) {
         if (dialogMsg == null) {
+            if (TextUtils.isEmpty(msg)) {
+                msg = "加载中";
+            }
             dialogMsg = new LoadingDialog.Builder(context)
-                    .setCancelable(false)
+                    .setCancelable(true)
                     .setMessage(msg)
                     .setCancelOutside(false).create();
         }

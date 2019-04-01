@@ -18,11 +18,14 @@ import android.widget.ImageView;
 
 import com.daydream.corelibrary.R;
 import com.daydream.corelibrary.app.base.BaseActivity;
+import com.daydream.corelibrary.app.mvp.IPresenter;
 import com.daydream.corelibrary.scan.camera.CameraManager;
 import com.daydream.corelibrary.scan.decoding.CaptureActivityHandler;
 import com.daydream.corelibrary.scan.decoding.InactivityTimer;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Vector;
@@ -55,13 +58,19 @@ public class ScanCodeActivity extends BaseActivity implements Callback, View.OnC
     private ImageView iv_swtich_light;
     private SurfaceHolder surfaceHolder;
 
+    @NotNull
     @Override
-    protected int getLayoutId() {
+    public IPresenter initPresenter() {
+        return null;
+    }
+
+    @Override
+    public int getLayoutId() {
         return R.layout.activity_scan_code;
     }
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
+    public void initView(Bundle savedInstanceState) {
 
 //        StatusBarUtils.setColor(this, getResources().getColor(R.color.translucent_black_55));
         viewfinderView = findViewById(R.id.scanCode_vv_finder);
@@ -70,6 +79,11 @@ public class ScanCodeActivity extends BaseActivity implements Callback, View.OnC
 
         (findViewById(R.id.iv_back)).setOnClickListener(this);
         (findViewById(R.id.toolbar_menu_select_pic)).setOnClickListener(this);
+    }
+
+    @Override
+    public void initData() {
+
     }
 
     @Override

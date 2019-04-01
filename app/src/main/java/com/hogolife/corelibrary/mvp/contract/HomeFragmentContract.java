@@ -2,9 +2,7 @@ package com.hogolife.corelibrary.mvp.contract;
 
 import com.daydream.corelibrary.app.mvp.IPresenter;
 import com.daydream.corelibrary.app.mvp.IView;
-import com.hogolife.corelibrary.mvp.bean.GankListBean;
-
-import java.util.List;
+import com.hogolife.corelibrary.bean.NearlyGankVO;
 
 /**
  * 首页
@@ -17,10 +15,10 @@ import java.util.List;
 public interface HomeFragmentContract {
 
     interface View extends IView {
-        void showPhoto(List<GankListBean> list);
+        void showNearlyData(NearlyGankVO data);
     }
 
     interface Presenter extends IPresenter<View> {
-        void getPhotoData(String category, int page);
+        void getNearlyData();
     }
 }

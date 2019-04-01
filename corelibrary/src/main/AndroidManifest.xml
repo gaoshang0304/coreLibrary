@@ -12,6 +12,13 @@
     <application>
 
         <activity
+            android:name=".weight.CommonWebActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
             android:name=".photo.photopicker.PhotoPickerActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/imagepicker_ImagePickerTheme" />

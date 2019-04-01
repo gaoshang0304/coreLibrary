@@ -2,9 +2,7 @@ package com.daydream.corelibrary.app.base;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -15,8 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+
 import com.daydream.corelibrary.R;
+import com.daydream.corelibrary.app.mvp.IPresenter;
+import com.daydream.corelibrary.app.mvp.IView;
 import com.daydream.corelibrary.utils.DialogUtils;
+import com.daydream.corelibrary.weight.MultipleStatusView;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -25,15 +28,20 @@ import butterknife.Unbinder;
  * <p>
  */
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment<T extends IPresenter> extends Fragment implements IView {
 
     protected String TAG;
     protected Context mContext;
     protected Activity mActivity;
     private Unbinder binder;
+    protected MultipleStatusView mMultipleStatusView = null;
 
     protected boolean isViewCreated = false;
     private boolean isVisible = false;
+
+    protected T mPresenter = initPresenter();
+
+    protected abstract T initPresenter();
 
     @Override
     public void onAttach(Context context) {
@@ -69,8 +77,12 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mActivity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        //使内容占据整个屏幕，状态栏字体颜色为黑色
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            mActivity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+//        }
+        if (mPresenter != null) {
+            mPresenter.attachView(this);
         }
         mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         TAG = getClass().getSimpleName();
@@ -106,19 +118,14 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (binder != null)
+        if (binder != null) {
             binder.unbind();
             binder = null;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+        }
+        if (mPresenter != null) {
+            mPresenter.detachView();
+            mPresenter = null;
+        }
     }
 
     @LayoutRes
@@ -152,40 +159,56 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 显示提示框
      */
-    protected void showLoading() {
-        DialogUtils.showLoadingDialog(mContext);
+    public void showLoading(String msg) {
+        DialogUtils.showLoadingDialog(mContext, msg);
     }
 
     /**
      * 隐藏提示框
      */
-    protected void hideLoading() {
+    public void hideLoading() {
         DialogUtils.hideLoadingDialog();
     }
 
-    /**
-     * @param intent 自己new intent 可以加extra
-     */
     @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        getActivity().overridePendingTransition(R.anim.slide_in_from_right, R.anim.exit_from_right);
+    public void stateError() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showError();
+        }
     }
 
-    /**
-     * @param intent      自己new intent 可以加extra
-     * @param requestCode requestCode
-     */
     @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        getActivity().overridePendingTransition(R.anim.slide_in_from_right, R.anim.exit_from_right);
+    public void stateNoNetWork() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showNoNetwork();
+        }
+    }
+
+    @Override
+    public void stateEmpty() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showEmpty();
+        }
+    }
+
+    @Override
+    public void stateLoading() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showLoading();
+        }
+    }
+
+    @Override
+    public void stateMain() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showContent();
+        }
     }
 
     public void exitSelf() {
         FragmentManager sfm = getFragmentManager();
         FragmentTransaction sft = sfm.beginTransaction();
-        sft.setCustomAnimations(R.anim.exit_from_right, R.anim.slide_out_to_right);
+        sft.setCustomAnimations(R.anim.bottom_in, R.anim.bottom_out);
         sft.remove(this);
         sft.commit();
     }

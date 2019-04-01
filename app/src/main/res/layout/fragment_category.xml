@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/gank_io_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
+
+    <View
+        android:id="@+id/view_status"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_25"
+        android:background="@color/white" />
+
+    <com.daydream.corelibrary.weight.xtablayout.XTabLayout
+        android:id="@+id/tl_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:layout_below="@id/view_status"
+        android:background="@color/white"
+        app:xTabIndicatorColor="@color/colorPrimary"
+        app:xTabIndicatorHeight="@dimen/dp_3"
+        app:xTabIndicatorWidth="@dimen/dp_40"
+        app:xTabMode="scrollable"
+        app:xTabSelectedTextColor="@color/colorPrimary"
+        app:xTabSelectedTextSize="@dimen/sp_14"
+        app:xTabTextColor="@color/colorPrimaryDark"
+        app:xTabTextSize="@dimen/sp_14" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tl_tabs"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</RelativeLayout>

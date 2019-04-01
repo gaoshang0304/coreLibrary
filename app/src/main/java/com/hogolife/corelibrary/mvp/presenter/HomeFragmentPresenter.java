@@ -3,12 +3,10 @@ package com.hogolife.corelibrary.mvp.presenter;
 import android.content.Context;
 
 import com.daydream.corelibrary.app.mvp.RxPresenter;
-import com.hogolife.corelibrary.mvp.bean.ResponseResult;
+import com.hogolife.corelibrary.bean.NearlyGankVO;
+import com.hogolife.corelibrary.manager.DataManager;
+import com.hogolife.corelibrary.manager.RxUtil;
 import com.hogolife.corelibrary.mvp.contract.HomeFragmentContract;
-import com.hogolife.corelibrary.mvp.manager.DataManager;
-import com.hogolife.corelibrary.mvp.manager.RxUtil;
-
-import org.jetbrains.annotations.NotNull;
 
 import io.reactivex.functions.Consumer;
 
@@ -29,14 +27,15 @@ public class HomeFragmentPresenter extends RxPresenter<HomeFragmentContract.View
     }
 
     @Override
-    public void getPhotoData(@NotNull String category, int page) {
-        addSubscribe(DataManager.getInstance(mContext).getPhotoData(category, page)
-        .compose(RxUtil.rxSchedulerHelper())
-        .subscribe(new Consumer<ResponseResult>() {
-            @Override
-            public void accept(ResponseResult photoVO) throws Exception {
-                mView.showPhoto(photoVO.getResults());
-            }
-        }));
+    public void getNearlyData() {
+        addSubscribe(DataManager.getInstance(mContext).getNearlyGank()
+                .compose(RxUtil.rxSchedulerHelper())
+                .subscribe(new Consumer<NearlyGankVO>() {
+                    @Override
+                    public void accept(NearlyGankVO nearlyGankVO) throws Exception {
+                        mView.showNearlyData(nearlyGankVO);
+                    }
+                })
+        );
     }
 }

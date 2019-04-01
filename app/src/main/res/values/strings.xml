@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">CoreLibrary</string>
     <string name="action_settings">Settings</string>
-    <string name="tab_home">首页</string>
-    <string name="tab_middle">发现</string>
-    <string name="tab_mine">我的</string>
+    <string name="tab_home">最新</string>
+    <string name="tab_category">分类</string>
+    <string name="tab_video">视频</string>
+    <string name="tab_beauty">妹子</string>
     <string name="exit_app">再按一次退出</string>
 </resources>

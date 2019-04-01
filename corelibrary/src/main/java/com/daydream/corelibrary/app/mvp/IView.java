@@ -12,10 +12,10 @@ public interface IView {
     //取消dialog
     void hideLoading();
 
-    void showErrorMsg(String msg);
-
     //=======  State  =======
     void stateError();
+
+    void stateNoNetWork();
 
     void stateEmpty();
 

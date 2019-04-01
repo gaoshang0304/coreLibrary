@@ -1,7 +1,6 @@
 package com.daydream.corelibrary.app.base;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +12,11 @@ import android.widget.EditText;
 
 import com.daydream.corelibrary.R;
 import com.daydream.corelibrary.app.manager.AppManager;
+import com.daydream.corelibrary.app.mvp.IPresenter;
+import com.daydream.corelibrary.app.mvp.IView;
+import com.daydream.corelibrary.app.transitionmode.TransitionMode;
 import com.daydream.corelibrary.utils.DialogUtils;
+import com.daydream.corelibrary.weight.MultipleStatusView;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -24,23 +27,20 @@ import butterknife.Unbinder;
  * BaseActivity
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivity implements IView {
 
     protected Context mContext;//全局上下文对象
     private Unbinder unbinder;
+    protected MultipleStatusView mMultipleStatusView = null;
+    protected P mPresenter = initPresenter();
+    private TransitionMode mTransitionMode = TransitionMode.RIGHT;
+
+    protected abstract P initPresenter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(savedInstanceState);
-    }
-
-    @Override
-    protected void onDestroy() {
-        AppManager.getAppManager().finishActivity(this);
-        unbinder.unbind();
-        unbinder = null;
-        super.onDestroy();
     }
 
     private void init(Bundle savedInstanceState) {
@@ -53,19 +53,28 @@ public abstract class BaseActivity extends AppCompatActivity {
         onViewCreated();
         initData();
         AppManager.getAppManager().addActivity(this);
+        TransitionMode mode = setOverridePendingTransitionMode(mTransitionMode);
+        if (mode.equals(TransitionMode.LEFT)) {
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        } else if (mode.equals(TransitionMode.RIGHT)) {
+            overridePendingTransition(R.anim.enter_trans, R.anim.exit_right);
+        }else if (mode.equals(TransitionMode.TOP)) {
+            overridePendingTransition(R.anim.top_in, R.anim.top_out);
+        }else if (mode.equals(TransitionMode.BOTTOM)) {
+            overridePendingTransition(R.anim.bottom_in, 0);
+        }else if (mode.equals(TransitionMode.SCALE)) {
+            overridePendingTransition(R.anim.scale_in, R.anim.scale_out);
+        }else if (mode.equals(TransitionMode.FADE)) {
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }else if (mode.equals(TransitionMode.ZOOM)) {
+            overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+        }
     }
 
     protected void onViewCreated() {
-
-    }
-
-    public void reload() {
-        Intent intent = getIntent();
-        overridePendingTransition(0, 0);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        overridePendingTransition(0, 0);
-        startActivity(intent);
+        if (mPresenter != null) {
+            mPresenter.attachView(this);
+        }
     }
 
     /**
@@ -96,41 +105,92 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 显示提示框
      */
-    protected void showLoading(@Nullable String msg) {
+    public void showLoading(@Nullable String msg) {
         DialogUtils.showLoadingDialog(this, msg);
     }
 
     /**
      * 隐藏提示框
      */
-    protected void hideLoading() {
+    public void hideLoading() {
         DialogUtils.hideLoadingDialog();
     }
 
-    /**
-     * @param intent 自己new intent 可以加extra
-     */
     @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_from_right, R.anim.exit_from_right);
+    public void stateError() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showError();
+        }
     }
 
-    /**
-     * @param intent      自己new intent 可以加extra
-     * @param requestCode requestCode
-     */
     @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        overridePendingTransition(R.anim.slide_in_from_right, R.anim.exit_from_right);
+    public void stateNoNetWork() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showNoNetwork();
+        }
+    }
+
+    @Override
+    public void stateEmpty() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showEmpty();
+        }
+    }
+
+    @Override
+    public void stateLoading() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showLoading();
+        }
+    }
+
+    @Override
+    public void stateMain() {
+        if (mMultipleStatusView != null) {
+            mMultipleStatusView.showContent();
+        }
+    }
+
+    protected TransitionMode setOverridePendingTransitionMode(TransitionMode transitionMode) {
+        mTransitionMode = transitionMode;
+        return mTransitionMode;
     }
 
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.exit_from_right, R.anim.slide_out_to_right);
+        TransitionMode mode = setOverridePendingTransitionMode(mTransitionMode);
+        if (mode.equals(TransitionMode.LEFT)) {
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        } else if (mode.equals(TransitionMode.RIGHT)) {
+            overridePendingTransition(R.anim.exit_right, R.anim.exit_trans);
+        }else if (mode.equals(TransitionMode.TOP)) {
+            overridePendingTransition(R.anim.top_in, R.anim.top_out);
+        }else if (mode.equals(TransitionMode.BOTTOM)) {
+            overridePendingTransition(0, R.anim.bottom_out);
+        }else if (mode.equals(TransitionMode.SCALE)) {
+            overridePendingTransition(R.anim.scale_in, R.anim.scale_out);
+        }else if (mode.equals(TransitionMode.FADE)) {
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }else if (mode.equals(TransitionMode.ZOOM)) {
+            overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
+        }
     }
+
+    @Override
+    protected void onDestroy() {
+        AppManager.getAppManager().finishActivity(this);
+        if (unbinder != null) {
+            unbinder.unbind();
+            unbinder = null;
+        }
+        if (mPresenter != null) {
+            mPresenter.detachView();
+            mPresenter = null;
+        }
+        super.onDestroy();
+    }
+
 
     /**
      * 隐藏键盘

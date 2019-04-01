@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 通用轮播图 -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/bannerView_vp_images"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#696969"/>
+
+    <ImageView
+        android:id="@+id/homeHeader_iv_banner_bottom_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+    <LinearLayout
+        android:id="@+id/bannerView_ll_dots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/bannerView_vp_images"
+        android:background="@android:color/transparent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal"/>
+</merge>
